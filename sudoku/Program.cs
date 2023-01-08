@@ -45,6 +45,15 @@ void DrawField(int[,] field)
             DrawLine();
         for (int j = 0; j < field.GetLength(1); j++)
         {
+            switch (field[i, j])
+            {
+                case 0:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+            }
             if (j == 2 || j == 5)
             {
 
@@ -57,9 +66,10 @@ void DrawField(int[,] field)
         }
         Console.WriteLine();
     }
+
 }
 
-void DrawLine() 
+void DrawLine()
 {
     for (int i = 0; i < (int)Constants.rows; i++)
     {
@@ -73,6 +83,98 @@ void DrawLine()
         }
     }
     Console.WriteLine();
+}
+
+void Level1(int[,] field)
+{
+    Random random = new Random();
+    double square = Math.Pow(field.GetLength(0), 2);
+    for (int k = 0; k < (int)Constants.Level1; k++)
+    {
+        int empty = random.Next(1, (int)square + 1);
+        for (int i = 0; i < field.GetLength(0); i++)
+        {
+            for (int j = 0; j < field.GetLength(1); j++)
+            {
+                if (i == empty / 10 && j == empty % 10)
+                {
+                    field[i, j] = 0;
+                }
+            }
+
+        }
+    }
+}
+
+void Level2(int[,] field)
+{
+    Random random = new Random();
+    double square = Math.Pow(field.GetLength(0), 2);
+    for (int k = 0; k < (int)Constants.Level2; k++)
+    {
+        int empty = random.Next(1, (int)square + 1);
+        for (int i = 0; i < field.GetLength(0); i++)
+        {
+            for (int j = 0; j < field.GetLength(1); j++)
+            {
+                if (i == empty / 10 && j == empty % 10)
+                {
+                    field[i, j] = 0;
+                }
+            }
+
+        }
+    }
+}
+
+void Level3(int[,] field)
+{
+    Random random = new Random();
+    double square = Math.Pow(field.GetLength(0), 2);
+    for (int k = 0; k < (int)Constants.Level3; k++)
+    {
+        int empty = random.Next(1, (int)square + 1);
+        for (int i = 0; i < field.GetLength(0); i++)
+        {
+            for (int j = 0; j < field.GetLength(1); j++)
+            {
+                if (i == empty / 10 && j == empty % 10)
+                {
+                    field[i, j] = 0;
+                }
+            }
+
+        }
+    }
+}
+
+void LevelSelection(int[,] field)
+{
+    int level;
+    try
+    {
+        Console.WriteLine("Введите уровень который вы хотите пройти от 1 до 3");
+        level = int.Parse(Console.ReadLine());
+    }
+    catch
+    {
+        Console.WriteLine("Вы ввели не точное значение введите его заново от 1 до 3");
+        level = int.Parse(Console.ReadLine());
+    }
+    switch (level)
+    {
+        case 1:
+            Level1(field);
+            break;
+
+        case 2:
+            Level2(field);
+            break;
+
+        case 3:
+            Level3(field);
+            break;
+    }
 }
 
 //------------------------
@@ -96,6 +198,10 @@ CreatRow(field, 2, 0, 6);
 CreatRow(field, 3, 6, 7);
 CreatRow(field, 3, 7, 8);
 
+LevelSelection(field);
+
 DrawField(field);
+
+Console.ReadLine();
 
 
