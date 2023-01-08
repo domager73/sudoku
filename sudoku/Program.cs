@@ -65,7 +65,6 @@ void DrawLine()
     {
         if (i == 2 || i == 5)
         {
-
             Console.Write($" - |");
         }
         else
