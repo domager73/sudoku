@@ -252,13 +252,17 @@ LevelSelection(field);
 int numberZero = NumberZero(field);
 int health = 3;
 
+Console.WriteLine("Начало отсчета идеит из верхнего левого угла и начинаеться с (1, 1).");
+Console.WriteLine("Сначала введите значение по вертикали а затем значение пог горизонтали.");
+Console.ReadLine();
+
 while (health > 0) 
 {
     Console.Clear();
     Console.WriteLine($"количество оставшихся клеток: {numberZero}");
     Console.WriteLine($"количество оставшихся жизней: {health}");
     DrawField(field);
-    Console.WriteLine("Сначала введеите кординату клетки начало отсчета в лево верхнем углу");
+    Console.WriteLine("Сначала введеите кординату клетки");
     int CellI = int.Parse(Console.ReadLine()) - 1;
     int CellJ = int.Parse(Console.ReadLine()) - 1;
     Console.WriteLine("Введите значение котоое вы хотите вставить");
