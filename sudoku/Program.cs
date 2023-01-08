@@ -48,10 +48,10 @@ void DrawField(int[,] field)
             switch (field[i, j])
             {
                 case 0:
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Red;
                     break;
                 default:
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Green;
                     break;
             }
             if (j == 2 || j == 5)
@@ -91,12 +91,13 @@ void Level1(int[,] field)
     double square = Math.Pow(field.GetLength(0), 2);
     for (int k = 0; k < (int)Constants.Level1; k++)
     {
-        int empty = random.Next(1, (int)square + 1);
+        int emptyI = random.Next(0, field.GetLength(0));
+        int emptyJ = random.Next(0, field.GetLength(1));
         for (int i = 0; i < field.GetLength(0); i++)
         {
             for (int j = 0; j < field.GetLength(1); j++)
             {
-                if (i == empty / 10 && j == empty % 10)
+                if (i == emptyI && j == emptyJ)
                 {
                     field[i, j] = 0;
                 }
@@ -112,12 +113,13 @@ void Level2(int[,] field)
     double square = Math.Pow(field.GetLength(0), 2);
     for (int k = 0; k < (int)Constants.Level2; k++)
     {
-        int empty = random.Next(1, (int)square + 1);
+        int emptyI = random.Next(0, field.GetLength(0));
+        int emptyJ = random.Next(0, field.GetLength(1));
         for (int i = 0; i < field.GetLength(0); i++)
         {
             for (int j = 0; j < field.GetLength(1); j++)
             {
-                if (i == empty / 10 && j == empty % 10)
+                if (i == emptyI && j == emptyJ)
                 {
                     field[i, j] = 0;
                 }
@@ -133,12 +135,13 @@ void Level3(int[,] field)
     double square = Math.Pow(field.GetLength(0), 2);
     for (int k = 0; k < (int)Constants.Level3; k++)
     {
-        int empty = random.Next(1, (int)square + 1);
+        int emptyI = random.Next(0, field.GetLength(0));
+        int emptyJ = random.Next(0, field.GetLength(1));
         for (int i = 0; i < field.GetLength(0); i++)
         {
             for (int j = 0; j < field.GetLength(1); j++)
             {
-                if (i == empty / 10 && j == empty % 10)
+                if (i == emptyI && j == emptyJ)
                 {
                     field[i, j] = 0;
                 }
@@ -175,11 +178,49 @@ void LevelSelection(int[,] field)
             Level3(field);
             break;
     }
+    Console.Clear();
 }
+
+int NumberZero(int[,] field, int numberZero = 0)
+{
+    for (int i = 0; i < field.GetLength(0); i++)
+    {
+        for (int j = 0; j < field.GetLength(1); j++)
+        {
+            if (field[i, j] == 0)
+            {
+                numberZero++;
+            }
+        }
+    }
+    return numberZero;
+}
+
+int CheckElement(int[,] mainField,int numberZero, int CellI, int CellJ, int value, ref int[,] field, ref int health) 
+{
+    for (int i = 0; i < mainField.GetLength(0); i++)
+    {
+        for (int j = 0; j < mainField.GetLength(1); j++)
+        {
+            if (CellI == i && CellJ == j && value == mainField[i, j])
+            {
+                numberZero--;
+                field[i, j] = value;
+            }
+            else if(CellI == i && CellJ == j && value != mainField[i, j])
+            {
+                health--;
+                Console.WriteLine("Вы ввели не точное значение");
+            }
+        }
+    }
+    return numberZero;
+} 
 
 //------------------------
 
 int[,] field = new int[(int)Constants.rows, (int)Constants.cols];
+int[,] mainField = new int[(int)Constants.rows, (int)Constants.cols];
 
 // Make the first grid
 
@@ -198,9 +239,42 @@ CreatRow(field, 2, 0, 6);
 CreatRow(field, 3, 6, 7);
 CreatRow(field, 3, 7, 8);
 
+for (int i = 0; i < 9; i++)
+{
+    for (int j = 0; j < 9; j++)
+    {
+        mainField[i, j] = field[i, j];
+    }
+}
+
 LevelSelection(field);
 
-DrawField(field);
+int numberZero = NumberZero(field);
+int health = 3;
+
+while (health > 0) 
+{
+    Console.Clear();
+    Console.WriteLine($"количество оставшихся клеток: {numberZero}");
+    Console.WriteLine($"количество оставшихся жизней: {health}");
+    DrawField(field);
+    Console.WriteLine("Сначала введеите кординату клетки начало отсчета в лево верхнем углу");
+    int CellI = int.Parse(Console.ReadLine()) - 1;
+    int CellJ = int.Parse(Console.ReadLine()) - 1;
+    Console.WriteLine("Введите значение котоое вы хотите вставить");
+    int value = int.Parse(Console.ReadLine());
+    numberZero = CheckElement(mainField, numberZero, CellI, CellJ, value, ref field, ref health);
+    Console.ReadLine();
+}
+
+if (health == 0)
+{
+    Console.WriteLine("Ничего в следующий раз получистья");
+}
+else 
+{
+    Console.WriteLine("Ура вы победили");
+}
 
 Console.ReadLine();
 
