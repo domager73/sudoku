@@ -43,14 +43,46 @@ void DrawField(int[,] field)
 {
     for (int i = 0; i < field.GetLength(0); i++)
     {
+        if (i == 3 || i == 6)
+            DrawLine();
         for (int j = 0; j < field.GetLength(1); j++)
         {
-            Console.Write(field[i, j] + " ");
+            if (j == 2 || j == 5)
+            {
+
+                Console.Write($" {field[i, j]} |");
+            }
+            else
+            {
+                Console.Write($" {field[i, j]} ");
+            }
         }
         Console.WriteLine();
     }
 }
+
+void DrawLine() 
+{
+    for (int i = 0; i < (int)Constants.rows; i++)
+    {
+        if (i == 2 || i == 5)
+        {
+
+            Console.Write($" - |");
+        }
+        else
+        {
+            Console.Write($" - ");
+        }
+    }
+    Console.WriteLine();
+}
+
+
 //------------------------
+
+
+
 int[,] field = new int[(int)Constants.rows, (int)Constants.cols];
 
 // Make the first grid

@@ -10,5 +10,9 @@ namespace SudokyConstants
     {
         rows = 9,
         cols = 9,
+        Empty = '*',
+        Level1 = 10,
+        Level2 = 25,
+        Level3 = 40
     }
 }
