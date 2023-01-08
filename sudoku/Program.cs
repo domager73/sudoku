@@ -37,8 +37,6 @@ void CreatRow(int[,] field, int muchShift, int fromWhat, int inWhich)
     }
 }
 
-
-
 void DrawField(int[,] field)
 {
     for (int i = 0; i < field.GetLength(0); i++)
@@ -78,10 +76,7 @@ void DrawLine()
     Console.WriteLine();
 }
 
-
 //------------------------
-
-
 
 int[,] field = new int[(int)Constants.rows, (int)Constants.cols];
 
