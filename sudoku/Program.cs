@@ -196,8 +196,12 @@ int NumberZero(int[,] field, int numberZero = 0)
     return numberZero;
 }
 
-int CheckElement(int[,] mainField,int numberZero, int CellI, int CellJ, int value, ref int[,] field, ref int health) 
+
+
+int CheckElement(int[,] mainField, int numberZero, int CellI, int CellJ, int value, ref int[,] field, ref int health)
 {
+
+
     for (int i = 0; i < mainField.GetLength(0); i++)
     {
         for (int j = 0; j < mainField.GetLength(1); j++)
@@ -207,7 +211,7 @@ int CheckElement(int[,] mainField,int numberZero, int CellI, int CellJ, int valu
                 numberZero--;
                 field[i, j] = value;
             }
-            else if(CellI == i && CellJ == j && value != mainField[i, j])
+            else if (CellI == i && CellJ == j && value != mainField[i, j])
             {
                 health--;
                 Console.WriteLine("Вы ввели не точное значение");
@@ -215,9 +219,21 @@ int CheckElement(int[,] mainField,int numberZero, int CellI, int CellJ, int valu
         }
     }
     return numberZero;
-} 
+}
 
-//------------------------
+bool CheckValues(int CellI, int CellJ) 
+{
+    bool checkValues = true;
+
+    if (CellI > 9 && CellI < 0 || CellJ > 9 && CellJ < 0) 
+    {
+        Console.WriteLine("Вы ввели не правильные значения");
+        checkValues = false;
+    }
+    return checkValues;
+}
+
+//----------------------------------------------------------------------------------------
 
 int[,] field = new int[(int)Constants.rows, (int)Constants.cols];
 int[,] mainField = new int[(int)Constants.rows, (int)Constants.cols];
@@ -253,33 +269,42 @@ int numberZero = NumberZero(field);
 int health = 3;
 
 Console.WriteLine("Начало отсчета идеит из верхнего левого угла и начинаеться с (1, 1).");
-Console.WriteLine("Сначала введите значение по вертикали а затем значение пог горизонтали.");
+Console.WriteLine("Сначала введите значение по вертикали а затем значение по горизонтали.");
 Console.ReadLine();
 
-while (health > 0) 
+while (health > 0 && numberZero != 0)
 {
     Console.Clear();
+
     Console.WriteLine($"количество оставшихся клеток: {numberZero}");
     Console.WriteLine($"количество оставшихся жизней: {health}");
+
     DrawField(field);
-    Console.WriteLine("Сначала введеите кординату клетки");
+
+    Console.WriteLine("Введите координату по вертикали");
     int CellI = int.Parse(Console.ReadLine()) - 1;
+    Console.WriteLine("Введите координату по горизонтали");
     int CellJ = int.Parse(Console.ReadLine()) - 1;
-    Console.WriteLine("Введите значение котоое вы хотите вставить");
+
+    Console.WriteLine("Введите значение которе вы хотите вставить ");
     int value = int.Parse(Console.ReadLine());
-    numberZero = CheckElement(mainField, numberZero, CellI, CellJ, value, ref field, ref health);
+
+    if (CheckValues(CellI, CellJ))
+    {
+        numberZero = CheckElement(mainField, numberZero, CellI, CellJ, value, ref field, ref health);
+    }
     Console.ReadLine();
 }
+Console.Clear();
+
 
 if (health == 0)
 {
-    Console.WriteLine("Ничего в следующий раз получистья");
+    Console.WriteLine("Вы проиграли. Ничего в следующий раз получистья");
 }
-else 
+else
 {
-    Console.WriteLine("Ура вы победили");
+    Console.WriteLine("Вы победили");
 }
 
 Console.ReadLine();
-
-

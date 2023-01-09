@@ -11,7 +11,7 @@ namespace SudokyConstants
         rows = 9,
         cols = 9,
         Level1 = 20,
-        Level2 = 35,
-        Level3 = 50,
+        Level2 = 45,
+        Level3 = 60
     }
 }
