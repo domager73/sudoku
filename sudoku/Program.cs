@@ -1,6 +1,7 @@
 ﻿using SudokyConstants;
+using System.Reflection.Emit;
 
-void AssignMainRow(int[,] field)
+void AssignMainRow(int[,] field)  // создание основной строки 
 {
     Random random = new Random();
 
@@ -22,7 +23,7 @@ void AssignMainRow(int[,] field)
     }
 }
 
-void CreatRow(int[,] field, int muchShift, int fromWhat, int inWhich)
+void CreatRow(int[,] field, int muchShift, int fromWhat, int inWhich)  // создание строки в зависимости от ее места
 {
     for (int i = 0; i < field.GetLength(1); i++)
     {
@@ -37,12 +38,14 @@ void CreatRow(int[,] field, int muchShift, int fromWhat, int inWhich)
     }
 }
 
-void DrawField(int[,] field)
+void DrawField(int[,] field) // прорисовка поля
 {
     for (int i = 0; i < field.GetLength(0); i++)
     {
-        if (i == 3 || i == 6)
+        if (i == (int)Constants.SeparatI1 || i == (int)Constants.SeparatI2)
+        {
             DrawLine();
+        }
         for (int j = 0; j < field.GetLength(1); j++)
         {
             switch (field[i, j])
@@ -54,7 +57,7 @@ void DrawField(int[,] field)
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
             }
-            if (j == 2 || j == 5)
+            if (j == (int)Constants.SeparatJ1 || j == (int)Constants.SeparatJ2)
             {
 
                 Console.Write($" {field[i, j]} |");
@@ -69,11 +72,11 @@ void DrawField(int[,] field)
 
 }
 
-void DrawLine()
+void DrawLine() // прорисовка горизонтальых линий
 {
     for (int i = 0; i < (int)Constants.rows; i++)
     {
-        if (i == 2 || i == 5)
+        if (i == (int)Constants.SeparatJ2 || i == (int)Constants.SeparatJ1)
         {
             Console.Write($" - |");
         }
@@ -85,7 +88,7 @@ void DrawLine()
     Console.WriteLine();
 }
 
-void Level1(int[,] field)
+void Level1(int[,] field) // создание 1 уровня
 {
     Random random = new Random();
     double square = Math.Pow(field.GetLength(0), 2);
@@ -107,7 +110,7 @@ void Level1(int[,] field)
     }
 }
 
-void Level2(int[,] field)
+void Level2(int[,] field) // создание 2 уровня
 {
     Random random = new Random();
     double square = Math.Pow(field.GetLength(0), 2);
@@ -129,7 +132,7 @@ void Level2(int[,] field)
     }
 }
 
-void Level3(int[,] field)
+void Level3(int[,] field) // создание 3 уровня
 {
     Random random = new Random();
     double square = Math.Pow(field.GetLength(0), 2);
@@ -151,19 +154,23 @@ void Level3(int[,] field)
     }
 }
 
-void LevelSelection(int[,] field)
+void LevelSelection(int[,] field) // Выбор уровня
 {
     int level;
-    try
+    bool isCorrectInput;
+    Console.WriteLine("Выберите уровень от 1 до 3");
+
+    do
     {
-        Console.WriteLine("Введите уровень который вы хотите пройти от 1 до 3");
+        isCorrectInput = true;
         level = int.Parse(Console.ReadLine());
-    }
-    catch
-    {
-        Console.WriteLine("Вы ввели не точное значение введите его заново от 1 до 3");
-        level = int.Parse(Console.ReadLine());
-    }
+        if (level < 1 || level > 3)
+        {
+            isCorrectInput = false;
+            Console.WriteLine("Вы ввелим не точное значение");
+        }
+    } while (isCorrectInput == false);
+
     switch (level)
     {
         case 1:
@@ -181,7 +188,7 @@ void LevelSelection(int[,] field)
     Console.Clear();
 }
 
-int NumberZero(int[,] field, int numberZero = 0)
+int NumberZero(int[,] field, int numberZero = 0) // Количество нулей
 {
     for (int i = 0; i < field.GetLength(0); i++)
     {
@@ -196,9 +203,8 @@ int NumberZero(int[,] field, int numberZero = 0)
     return numberZero;
 }
 
-
-
-int CheckElement(int[,] mainField, int numberZero, int CellI, int CellJ, int value, ref int[,] field, ref int health)
+int CheckElement(int[,] mainField, int numberZero, int CellI, int CellJ, int value, ref int[,] field, ref int health)  
+    // Проверка введенного значения
 {
 
 
@@ -221,16 +227,33 @@ int CheckElement(int[,] mainField, int numberZero, int CellI, int CellJ, int val
     return numberZero;
 }
 
-bool CheckValues(int CellI, int CellJ) 
+bool CheckValues(int CellI, int CellJ) // проверка введенных координат 
 {
     bool checkValues = true;
 
-    if (CellI > 9 && CellI < 0 || CellJ > 9 && CellJ < 0) 
+    if (CellI > (int)Constants.rows && CellI < 0 || CellJ > (int)Constants.rows && CellJ < 0) 
     {
         Console.WriteLine("Вы ввели не правильные значения");
         checkValues = false;
     }
     return checkValues;
+}
+
+int Read() // считывание 
+{
+    return int.Parse(Console.ReadLine());
+}
+
+void CheckVin(int health) 
+{
+    if (health == 0)
+    {
+        Console.WriteLine("Вы проиграли. Ничего в следующий раз получистья");
+    }
+    else
+    {
+        Console.WriteLine("Вы победили");
+    }
 }
 
 //----------------------------------------------------------------------------------------
@@ -255,9 +278,9 @@ CreatRow(field, 2, 0, 6);
 CreatRow(field, 3, 6, 7);
 CreatRow(field, 3, 7, 8);
 
-for (int i = 0; i < 9; i++)
+for (int i = 0; i < field.GetLength(0); i++)
 {
-    for (int j = 0; j < 9; j++)
+    for (int j = 0; j < field.GetLength(1); j++)
     {
         mainField[i, j] = field[i, j];
     }
@@ -266,7 +289,7 @@ for (int i = 0; i < 9; i++)
 LevelSelection(field);
 
 int numberZero = NumberZero(field);
-int health = 3;
+int health = (int)Constants.health;
 
 Console.WriteLine("Начало отсчета идеит из верхнего левого угла и начинаеться с (1, 1).");
 Console.WriteLine("Сначала введите значение по вертикали а затем значение по горизонтали.");
@@ -282,12 +305,12 @@ while (health > 0 && numberZero != 0)
     DrawField(field);
 
     Console.WriteLine("Введите координату по вертикали");
-    int CellI = int.Parse(Console.ReadLine()) - 1;
+    int CellI = Read() - 1;
     Console.WriteLine("Введите координату по горизонтали");
-    int CellJ = int.Parse(Console.ReadLine()) - 1;
+    int CellJ = Read() - 1;
 
     Console.WriteLine("Введите значение которе вы хотите вставить ");
-    int value = int.Parse(Console.ReadLine());
+    int value = Read();
 
     if (CheckValues(CellI, CellJ))
     {
@@ -298,13 +321,5 @@ while (health > 0 && numberZero != 0)
 Console.Clear();
 
 
-if (health == 0)
-{
-    Console.WriteLine("Вы проиграли. Ничего в следующий раз получистья");
-}
-else
-{
-    Console.WriteLine("Вы победили");
-}
 
 Console.ReadLine();
