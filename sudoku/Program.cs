@@ -1,5 +1,4 @@
 ﻿using SudokyConstants;
-using System.Reflection.Emit;
 
 void AssignMainRow(int[,] field)  // создание основной строки 
 {
@@ -36,6 +35,19 @@ void CreatRow(int[,] field, int muchShift, int fromWhat, int inWhich)  // соз
             field[inWhich, i] = field[fromWhat, i - field.GetLength(1) + muchShift];
         }
     }
+}
+
+int[,] CopyArray(int[,] field, int[,] array)
+{
+    for (int i = 0; i < field.GetLength(0); i++)
+    {
+        for (int j = 0; j < field.GetLength(1); j++)
+        {
+            array[i, j] = field[i, j];
+        }
+    }
+
+    return array;
 }
 
 void DrawField(int[,] field) // прорисовка поля
@@ -154,22 +166,32 @@ void Level3(int[,] field) // создание 3 уровня
     }
 }
 
-void LevelSelection(int[,] field) // Выбор уровня
+int CheckValue(int frontMany, int untilMany, string words)
 {
-    int level;
     bool isCorrectInput;
-    Console.WriteLine("Выберите уровень от 1 до 3");
+    int level;
+
+    Console.WriteLine($"{words}");
 
     do
     {
         isCorrectInput = true;
         level = int.Parse(Console.ReadLine());
-        if (level < 1 || level > 3)
+        if (level < frontMany || level > untilMany)
         {
             isCorrectInput = false;
-            Console.WriteLine("Вы ввелим не точное значение");
+            Console.WriteLine("Вы ввелим не точное значение, введите его заново");
         }
     } while (isCorrectInput == false);
+    return level;
+}
+
+void LevelSelection(int[,] field) // Выбор уровня
+{
+    int level;
+    bool isCorrectInput = true;
+
+    level = CheckValue(1, 3, "Выберите уровень от 1 до 3");
 
     switch (level)
     {
@@ -203,8 +225,8 @@ int NumberZero(int[,] field, int numberZero = 0) // Количество нул�
     return numberZero;
 }
 
-int CheckElement(int[,] mainField, int numberZero, int CellI, int CellJ, int value, ref int[,] field, ref int health)  
-    // Проверка введенного значения
+int CheckElement(int[,] mainField, int numberZero, int cellI, int cellJ, int value, ref int[,] field, ref int health)
+// Проверка введенного значения
 {
 
 
@@ -212,26 +234,26 @@ int CheckElement(int[,] mainField, int numberZero, int CellI, int CellJ, int val
     {
         for (int j = 0; j < mainField.GetLength(1); j++)
         {
-            if (CellI == i && CellJ == j && value == mainField[i, j])
+            if (cellI == i && cellJ == j && value == mainField[i, j])
             {
                 numberZero--;
                 field[i, j] = value;
             }
-            else if (CellI == i && CellJ == j && value != mainField[i, j])
+            else if (cellI == i && cellJ == j && value != mainField[i, j])
             {
                 health--;
-                Console.WriteLine("Вы ввели не точное значение");
+                Console.WriteLine("XXX Вы ввели не правильное значение для этой клетки XXX");
             }
         }
     }
     return numberZero;
 }
 
-bool CheckValues(int CellI, int CellJ) // проверка введенных координат 
+bool CheckValues(int cellI, int cellJ) // проверка введенных координат 
 {
     bool checkValues = true;
 
-    if (CellI > (int)Constants.rows && CellI < 0 || CellJ > (int)Constants.rows && CellJ < 0) 
+    if (cellI > (int)Constants.rows && cellI < 0 || cellJ > (int)Constants.rows && cellJ < 0)
     {
         Console.WriteLine("Вы ввели не правильные значения");
         checkValues = false;
@@ -244,7 +266,7 @@ int Read() // считывание
     return int.Parse(Console.ReadLine());
 }
 
-void CheckVin(int health) 
+void CheckVin(int health)
 {
     if (health == 0)
     {
@@ -254,6 +276,16 @@ void CheckVin(int health)
     {
         Console.WriteLine("Вы победили");
     }
+}
+
+bool CheckVinOrLoss(int health, int numberZero)
+{
+    bool check = false;
+    if (health > 0 && numberZero != 0)
+    {
+        check = true;
+    }
+    return check;
 }
 
 //----------------------------------------------------------------------------------------
@@ -278,13 +310,7 @@ CreatRow(field, 2, 0, 6);
 CreatRow(field, 3, 6, 7);
 CreatRow(field, 3, 7, 8);
 
-for (int i = 0; i < field.GetLength(0); i++)
-{
-    for (int j = 0; j < field.GetLength(1); j++)
-    {
-        mainField[i, j] = field[i, j];
-    }
-}
+CopyArray(field, mainField);
 
 LevelSelection(field);
 
@@ -295,7 +321,7 @@ Console.WriteLine("Начало отсчета идеит из верхнего 
 Console.WriteLine("Сначала введите значение по вертикали а затем значение по горизонтали.");
 Console.ReadLine();
 
-while (health > 0 && numberZero != 0)
+while (CheckVinOrLoss(health, numberZero))
 {
     Console.Clear();
 
@@ -304,22 +330,20 @@ while (health > 0 && numberZero != 0)
 
     DrawField(field);
 
-    Console.WriteLine("Введите координату по вертикали");
-    int CellI = Read() - 1;
-    Console.WriteLine("Введите координату по горизонтали");
-    int CellJ = Read() - 1;
+    int cellI;
+    cellI = CheckValue(1, 9, "Введите координату по вертикали от 1 до 9") - 1;
+    int cellJ;
+    cellJ = CheckValue(1, 9, "Введите координату по горизонтали от 1 до 9") - 1;
 
-    Console.WriteLine("Введите значение которе вы хотите вставить ");
-    int value = Read();
+    int value;
+    value = CheckValue(1, 9, "Введите значение для заданной вами клетки");
 
-    if (CheckValues(CellI, CellJ))
-    {
-        numberZero = CheckElement(mainField, numberZero, CellI, CellJ, value, ref field, ref health);
-    }
+    numberZero = CheckElement(mainField, numberZero, cellI, cellJ, value, ref field, ref health);
+
     Console.ReadLine();
 }
 Console.Clear();
 
-
+CheckVin(health);
 
 Console.ReadLine();
