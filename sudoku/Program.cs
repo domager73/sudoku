@@ -119,10 +119,9 @@ void CreatField(int[,] field)
     CreatRow(field, 3, 7, 8);
 }
 
-void Level1(int[,] field)
+void Level1(int[,] field)  // создание уровня поразумевает добавление в рандомные места нули 
 {
     Random random = new Random();
-    double square = Math.Pow(field.GetLength(0), 2);
     for (int k = 0; k < (int)Constants.Level1; k++)
     {
         int emptyI = random.Next(0, field.GetLength(0));
@@ -144,7 +143,6 @@ void Level1(int[,] field)
 void Level2(int[,] field)
 {
     Random random = new Random();
-    double square = Math.Pow(field.GetLength(0), 2);
     for (int k = 0; k < (int)Constants.Level2; k++)
     {
         int emptyI = random.Next(0, field.GetLength(0));
@@ -166,7 +164,6 @@ void Level2(int[,] field)
 void Level3(int[,] field)
 {
     Random random = new Random();
-    double square = Math.Pow(field.GetLength(0), 2);
     for (int k = 0; k < (int)Constants.Level3; k++)
     {
         int emptyI = random.Next(0, field.GetLength(0));
@@ -188,19 +185,19 @@ void Level3(int[,] field)
 int CheckValue(int frontMany, int untilMany) // проверка точности введенного значения
 {
     bool isCorrectInput;
-    int level;
+    int number;
 
     do
     {
         isCorrectInput = true;
-        level = int.Parse(Console.ReadLine());
-        if (level < frontMany || level > untilMany)
+        number = int.Parse(Console.ReadLine());
+        if (number < frontMany || number > untilMany)
         {
             isCorrectInput = false;
             Console.WriteLine("Вы ввелим не точное значение, введите его заново");
         }
     } while (isCorrectInput == false);
-    return level;
+    return number;
 }
 
 void LevelSelection(int[,] field)
