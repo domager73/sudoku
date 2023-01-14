@@ -90,14 +90,33 @@ void DrawLine()
     {
         if (i == (int)Constants.SeparatJ2 || i == (int)Constants.SeparatJ1)
         {
-            Console.Write($" - |");
+            Console.Write(" - |");
         }
         else
         {
-            Console.Write($" - ");
+            Console.Write(" - ");
         }
     }
     Console.WriteLine();
+}
+
+void CreatField(int[,] field) 
+{
+    // Make the first grid
+    AssignMainRow(field);
+    CreatRow(field, 3, 0, 1);
+    CreatRow(field, 3, 1, 2);
+
+    // Make the second grid
+    CreatRow(field, 1, 0, 3);
+    CreatRow(field, 3, 3, 4);
+    CreatRow(field, 3, 4, 5);
+
+    // Make the third grid
+
+    CreatRow(field, 2, 0, 6);
+    CreatRow(field, 3, 6, 7);
+    CreatRow(field, 3, 7, 8);
 }
 
 void Level1(int[,] field)
@@ -166,12 +185,10 @@ void Level3(int[,] field)
     }
 }
 
-int CheckValue(int frontMany, int untilMany, string words) // проверка точности введенного значения
+int CheckValue(int frontMany, int untilMany) // проверка точности введенного значения
 {
     bool isCorrectInput;
     int level;
-
-    Console.WriteLine($"{words}");
 
     do
     {
@@ -190,7 +207,8 @@ void LevelSelection(int[,] field)
 {
     int level;
 
-    level = CheckValue(1, 3, "Выберите уровень от 1 до 3");
+    Console.WriteLine("Выберите уровень от 1 до 3");
+    level = CheckValue(1, 3);
 
     switch (level)
     {
@@ -206,7 +224,6 @@ void LevelSelection(int[,] field)
             Level3(field);
             break;
     }
-    Console.Clear();
 }
 
 int NumberZero(int[,] field, int numberZero = 0) // Количество нулей
@@ -222,6 +239,12 @@ int NumberZero(int[,] field, int numberZero = 0) // Количество нул�
         }
     }
     return numberZero;
+}
+void WriteIncorrectValue()
+{
+    Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    Console.WriteLine("XXX Вы ввели не правильное значение для этой клетки XXX");
+    Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 }
 
 int CheckElement(int[,] mainField, int numberZero, int cellI, int cellJ, int value, ref int[,] field, ref int health)
@@ -241,7 +264,7 @@ int CheckElement(int[,] mainField, int numberZero, int cellI, int cellJ, int val
             else if (cellI == i && cellJ == j && value != mainField[i, j])
             {
                 health--;
-                Console.WriteLine("XXX Вы ввели не правильное значение для этой клетки XXX");
+                WriteIncorrectValue();
             }
         }
     }
@@ -275,33 +298,25 @@ bool CheckVinOrLoss(int health, int numberZero) // Промежуточная п
 int[,] field = new int[(int)Constants.rows, (int)Constants.cols];
 int[,] mainField = new int[(int)Constants.rows, (int)Constants.cols];
 
-// Make the first grid
+int numberZero;
+int health;
 
-AssignMainRow(field);
-CreatRow(field, 3, 0, 1);
-CreatRow(field, 3, 1, 2);
+int cellI;
+int cellJ;
+int value;
 
-// Make the second grid
-CreatRow(field, 1, 0, 3);
-CreatRow(field, 3, 3, 4);
-CreatRow(field, 3, 4, 5);
-
-// Make the third grid
-
-CreatRow(field, 2, 0, 6);
-CreatRow(field, 3, 6, 7);
-CreatRow(field, 3, 7, 8);
+CreatField(field);
 
 CopyArray(field, mainField);
 
 LevelSelection(field);
-
-int numberZero = NumberZero(field);
-int health = (int)Constants.health;
+Console.Clear();
 
 Console.WriteLine("Начало отсчета идеит из верхнего левого угла и начинаеться с (1, 1).");
 Console.WriteLine("Сначала введите значение по вертикали а затем значение по горизонтали.");
 Console.ReadLine();
+numberZero = NumberZero(field);
+health = (int)Constants.health;
 
 while (CheckVinOrLoss(health, numberZero))
 {
@@ -312,13 +327,13 @@ while (CheckVinOrLoss(health, numberZero))
 
     DrawField(field);
 
-    int cellI;
-    cellI = CheckValue(1, 9, "Введите координату по вертикали от 1 до 9") - 1;
-    int cellJ;
-    cellJ = CheckValue(1, 9, "Введите координату по горизонтали от 1 до 9") - 1;
+    Console.WriteLine("Введите координату по вертикали от 1 до 9");
+    cellI = CheckValue(1, 9) - 1;
+    Console.WriteLine("Введите координату по горизонтали от 1 до 9");
+    cellJ = CheckValue(1, 9) - 1;
 
-    int value;
-    value = CheckValue(1, 9, "Введите значение для заданной вами клетки");
+    Console.WriteLine("Введите значение для заданной вами клетки");
+    value = CheckValue(1, 9);
 
     numberZero = CheckElement(mainField, numberZero, cellI, cellJ, value, ref field, ref health);
 
