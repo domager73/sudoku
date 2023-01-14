@@ -50,7 +50,7 @@ int[,] CopyArray(int[,] field, int[,] array)
     return array;
 }
 
-void DrawField(int[,] field) // прорисовка поля
+void DrawField(int[,] field)
 {
     for (int i = 0; i < field.GetLength(0); i++)
     {
@@ -84,7 +84,7 @@ void DrawField(int[,] field) // прорисовка поля
 
 }
 
-void DrawLine() // прорисовка горизонтальых линий
+void DrawLine()
 {
     for (int i = 0; i < (int)Constants.rows; i++)
     {
@@ -100,7 +100,7 @@ void DrawLine() // прорисовка горизонтальых линий
     Console.WriteLine();
 }
 
-void Level1(int[,] field) // создание 1 уровня
+void Level1(int[,] field)
 {
     Random random = new Random();
     double square = Math.Pow(field.GetLength(0), 2);
@@ -122,7 +122,7 @@ void Level1(int[,] field) // создание 1 уровня
     }
 }
 
-void Level2(int[,] field) // создание 2 уровня
+void Level2(int[,] field)
 {
     Random random = new Random();
     double square = Math.Pow(field.GetLength(0), 2);
@@ -144,7 +144,7 @@ void Level2(int[,] field) // создание 2 уровня
     }
 }
 
-void Level3(int[,] field) // создание 3 уровня
+void Level3(int[,] field)
 {
     Random random = new Random();
     double square = Math.Pow(field.GetLength(0), 2);
@@ -166,7 +166,7 @@ void Level3(int[,] field) // создание 3 уровня
     }
 }
 
-int CheckValue(int frontMany, int untilMany, string words)
+int CheckValue(int frontMany, int untilMany, string words) // проверка точности введенного значения
 {
     bool isCorrectInput;
     int level;
@@ -186,10 +186,9 @@ int CheckValue(int frontMany, int untilMany, string words)
     return level;
 }
 
-void LevelSelection(int[,] field) // Выбор уровня
+void LevelSelection(int[,] field)
 {
     int level;
-    bool isCorrectInput = true;
 
     level = CheckValue(1, 3, "Выберите уровень от 1 до 3");
 
@@ -226,7 +225,7 @@ int NumberZero(int[,] field, int numberZero = 0) // Количество нул�
 }
 
 int CheckElement(int[,] mainField, int numberZero, int cellI, int cellJ, int value, ref int[,] field, ref int health)
-// Проверка введенного значения
+// Проверка введенного значения на правильность
 {
 
 
@@ -249,24 +248,7 @@ int CheckElement(int[,] mainField, int numberZero, int cellI, int cellJ, int val
     return numberZero;
 }
 
-bool CheckValues(int cellI, int cellJ) // проверка введенных координат 
-{
-    bool checkValues = true;
-
-    if (cellI > (int)Constants.rows && cellI < 0 || cellJ > (int)Constants.rows && cellJ < 0)
-    {
-        Console.WriteLine("Вы ввели не правильные значения");
-        checkValues = false;
-    }
-    return checkValues;
-}
-
-int Read() // считывание 
-{
-    return int.Parse(Console.ReadLine());
-}
-
-void CheckVin(int health)
+void CheckVin(int health) // Итоговая проверка значений
 {
     if (health == 0)
     {
@@ -278,7 +260,7 @@ void CheckVin(int health)
     }
 }
 
-bool CheckVinOrLoss(int health, int numberZero)
+bool CheckVinOrLoss(int health, int numberZero) // Промежуточная проверка выйгрыша или проигрыша
 {
     bool check = false;
     if (health > 0 && numberZero != 0)
